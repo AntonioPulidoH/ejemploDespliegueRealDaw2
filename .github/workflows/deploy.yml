@@ -1,0 +1,35 @@
+name: Deploy to VPS
+
+on:
+  push:
+    branches:
+      - MAIN_BRANCH
+
+concurrency:
+  group: deploy-vps
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          port: ${{ secrets.SSH_PORT }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            set -e
+            mkdir -p ~/ejemploDespliegueRealDaw2
+            if [ ! -d ~/ejemploDespliegueRealDaw2/.git ]; then
+              git clone PLACEHOLDER_REPO_URL ~/ejemploDespliegueRealDaw2
+            fi
+            cd ~/ejemploDespliegueRealDaw2
+            git fetch --all
+            git reset --hard origin/MAIN_BRANCH
+            docker compose -f docker-compose.prod.yml up -d --build
