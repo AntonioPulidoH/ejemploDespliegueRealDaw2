@@ -1,0 +1,35 @@
+services:
+  db:
+    image: postgres:16
+    container_name: hm_postgres
+    environment:
+      POSTGRES_USER: appuser
+      POSTGRES_PASSWORD: apppass
+      POSTGRES_DB: appdb
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  backend:
+    build:
+      context: ./backend
+    container_name: hm_backend
+    environment:
+      DATABASE_URL: postgres://appuser:apppass@db:5432/appdb
+      PORT: 4000
+    depends_on:
+      - db
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.prod
+      args:
+        VITE_API_URL: ""
+    container_name: hm_frontend
+    ports:
+      - "8080:80"
+    depends_on:
+      - backend
+
+volumes:
+  pgdata:
