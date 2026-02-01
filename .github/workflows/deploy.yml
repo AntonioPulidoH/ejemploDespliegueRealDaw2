@@ -3,7 +3,7 @@ name: Deploy to VPS
 on:
   push:
     branches:
-      - MAIN_BRANCH
+      - main
 
 concurrency:
   group: deploy-vps
