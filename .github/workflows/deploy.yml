@@ -27,7 +27,7 @@ jobs:
             set -e
             mkdir -p ~/ejemploDespliegueRealDaw2
             if [ ! -d ~/ejemploDespliegueRealDaw2/.git ]; then
-              git clone PLACEHOLDER_REPO_URL ~/ejemploDespliegueRealDaw2
+              git clone https://github.com/AntonioPulidoH/ejemploDespliegueRealDaw2 ~/ejemploDespliegueRealDaw2
             fi
             cd ~/ejemploDespliegueRealDaw2
             git fetch --all
